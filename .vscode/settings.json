@@ -1,12 +1,14 @@
 {
-    "workbench.colorCustomizations": {
-        "activityBar.background": "#1E2F3C",
-        "titleBar.activeBackground": "#2A4255",
-        "titleBar.activeForeground": "#FBFCFD"
-    },
-    "cSpell.words": [
-        "sodev",
-        "sotest",
-        "testdb"
-    ]
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#1E2F3C",
+    "titleBar.activeBackground": "#2A4255",
+    "titleBar.activeForeground": "#FBFCFD"
+  },
+  "cSpell.words": [
+    "datasources",
+    "sodev",
+    "sotest",
+    "testdb",
+    "testuser"
+  ]
 }
