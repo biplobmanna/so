@@ -68,16 +68,17 @@ Pacman: yarn
   - PUBLIC    :: POST `/signin`
   - PUBLIC    :: POST `/signup`
 - **user**
-  - PROTECTED :: GET `/user/:username` : get user by `uid`
-  - PROTECTED :: PATCH `/user/:username` : update user by `uid`
+  - PUBLIC :: GET `/users/:username` : get user by `username`
+  - PROTECTED :: PATCH `/users/:username` : update user by `uid`
 - **so**
   - PUBLIC    :: GET `/` : get all `so`
   - PUBLIC    :: GET `/so` : get all `so`
   - PUBLIC    :: GET `/so/:sid` : get `so` by `sid`
-  - PUBLIC    :: GET `/user/:username/so` : get all `so` of user with `username`
-  - PUBLIC    :: GET `/category/tag` :  get all `so` of tag with `tid`
+  - PUBLIC    :: GET `so/users/:username` : get all `so` of user with `username`
+  - PUBLIC    :: GET `/so/tag/:tag` :  get all `so` of tag `tag`
   - PROTECTED :: POST `/so` : add new `so`
   - PROTECTED :: PATCH `/so/:sid` : update `so` with `sid`
+  - PROTECTED :: DELETE `/so/:sid` : delete `so` with `sid`
 
 ### Yarn Scripts
 
