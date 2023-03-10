@@ -68,13 +68,13 @@ Pacman: yarn
   - PUBLIC    :: POST `/signin`
   - PUBLIC    :: POST `/signup`
 - **user**
-  - PROTECTED :: GET `/user/:uid` : get user by `uid`
-  - PROTECTED :: PATCH `/user/:uid` : update user by `uid`
+  - PROTECTED :: GET `/user/:username` : get user by `uid`
+  - PROTECTED :: PATCH `/user/:username` : update user by `uid`
 - **so**
   - PUBLIC    :: GET `/` : get all `so`
   - PUBLIC    :: GET `/so` : get all `so`
   - PUBLIC    :: GET `/so/:sid` : get `so` by `sid`
-  - PUBLIC    :: GET `/user/:uid/so` : get all `so` of user with `uid`
+  - PUBLIC    :: GET `/user/:username/so` : get all `so` of user with `username`
   - PUBLIC    :: GET `/category/tag` :  get all `so` of tag with `tid`
   - PROTECTED :: POST `/so` : add new `so`
   - PROTECTED :: PATCH `/so/:sid` : update `so` with `sid`
@@ -102,6 +102,7 @@ Pacman: yarn
   "db:test:rm": "docker compose rm sotest -s -f -v",
   "db:test:up": "docker compose up sotest -d",
   "db:test:restart": "yarn db:test:rm && yarn db:test:up && timeout 2 && yarn db:test:deploy",
+  "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json"
 }
 ```
 
