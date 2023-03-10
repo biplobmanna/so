@@ -107,7 +107,9 @@ Pacman: yarn
 
 > If running on **\*nix** based OS's change `timeout 2` to `sleep 2` in the above scripts.
 
-#### Some Caveats
+---
+
+### Some Caveats
 
 - this is backend only
 - `.env` and `.env.test` are also included which should not be generally included
