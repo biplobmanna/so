@@ -1,0 +1,22 @@
+
+services:
+  sodev:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=dev
+      - POSTGRES_DB=sodev
+
+
+  sotest:
+    container_name: pg_test
+    image: postgres:latest
+    ports:
+      - 5430:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=sotest
