@@ -102,6 +102,7 @@ Pacman: yarn
   "db:test:rm": "docker compose rm sotest -s -f -v",
   "db:test:up": "docker compose up sotest -d",
   "db:test:restart": "yarn db:test:rm && yarn db:test:up && timeout 2 && yarn db:test:deploy",
+  "pretest:e2e": "yarn db:test:restart",
   "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json"
 }
 ```
