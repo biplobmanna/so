@@ -6,9 +6,11 @@
   },
   "cSpell.words": [
     "datasources",
+    "editedusername",
     "sodev",
     "sotest",
     "testdb",
-    "testuser"
+    "testuser",
+    "userdoesntexist"
   ]
 }
