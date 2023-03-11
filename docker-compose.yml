@@ -1,4 +1,3 @@
-
 services:
   sodev:
     container_name: postgres
@@ -9,7 +8,13 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=dev
       - POSTGRES_DB=sodev
-
+  devcache:
+    container_name: dcache
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - ./cache/dcache:/data
 
   sotest:
     container_name: pg_test
@@ -20,3 +25,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test
       - POSTGRES_DB=sotest
+
+  testcache:
+    container_name: tcache
+    image: redis:latest
+    ports:
+      - 6479:6379
+    volumes:
+      - ./cache/tcache:/data
