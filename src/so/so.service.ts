@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EditSoDto, NewSoDto } from './dto';
 import { User } from '@prisma/client';
+import { PaginationParams } from '../../types';
 
 @Injectable()
 export class SoService {
@@ -33,12 +34,13 @@ export class SoService {
     });
   }
 
-  async getSo() {
+  async getSo(params?: PaginationParams) {
     return await this.prisma.so.findMany({
       select: {
         content: true,
         tag: true,
       },
+      ...params,
     });
   }
 
@@ -59,7 +61,7 @@ export class SoService {
     }
   }
 
-  async getSoByTag(tag: string) {
+  async getSoByTag(tag: string, params?: PaginationParams) {
     return await this.prisma.so.findMany({
       where: {
         tag,
@@ -69,10 +71,11 @@ export class SoService {
         content: true,
         tag: true,
       },
+      ...params,
     });
   }
 
-  async getSoByUser(username: string) {
+  async getSoByUser(username: string, params?: PaginationParams) {
     // check if user exists
     let user: User;
     console.log(username);
@@ -95,6 +98,7 @@ export class SoService {
         content: true,
         tag: true,
       },
+      ...params,
     });
   }
 
@@ -144,5 +148,32 @@ export class SoService {
         userId,
       },
     });
+  }
+
+  filterQueryParams(query: string): PaginationParams {
+    const params: PaginationParams = {
+      orderBy: {},
+    };
+    if (query['skip']) {
+      try {
+        params['skip'] = parseInt(query['skip']);
+      } catch (error) {}
+    }
+    if (query['take']) {
+      try {
+        params['take'] = parseInt(query['take']);
+      } catch (error) {}
+    }
+
+    if (
+      query['orderby'] === 'id' ||
+      query['orderby'] === 'userId' ||
+      query['orderby'] === 'tag'
+    ) {
+      const type: string = query['type'] === 'desc' ? 'desc' : 'asc';
+      params['orderBy'][query['orderby']] = type;
+    }
+
+    return params;
   }
 }

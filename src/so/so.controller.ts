@@ -1,15 +1,17 @@
 import {
   Body,
+  CACHE_MANAGER,
   CacheInterceptor,
-  CacheKey,
   CacheTTL,
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,28 +20,32 @@ import { GetUser } from '../auth/decorator';
 import { SoService } from './so.service';
 import { EditSoDto, NewSoDto } from './dto';
 import { SoInterceptor } from './so.interceptor';
+import { Cache } from 'cache-manager';
 
 @Controller()
 export class SoController {
-  constructor(private soService: SoService) {}
+  constructor(
+    private soService: SoService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
-  @CacheKey('sotag')
   @CacheTTL(5 * 60) // 5 mins
   @UseInterceptors(CacheInterceptor)
   @Get('/so/tag/:tag')
-  getSoByTag(@Param('tag') tag: string) {
-    return this.soService.getSoByTag(tag);
+  getSoByTag(@Param('tag') tag: string, @Query() query: string) {
+    const params = this.soService.filterQueryParams(query);
+
+    return this.soService.getSoByTag(tag, params);
   }
 
-  @CacheKey('sousers')
   @CacheTTL(10 * 60) // 10 mins
   @UseInterceptors(CacheInterceptor)
   @Get('/so/users/:username')
-  getSoByUser(@Param('username') username: string) {
-    return this.soService.getSoByUser(username);
+  getSoByUser(@Param('username') username: string, @Query() query: string) {
+    const params = this.soService.filterQueryParams(query);
+    return this.soService.getSoByUser(username, params);
   }
 
-  @CacheKey('soid')
   @CacheTTL(60 * 60) // 1h
   @UseInterceptors(CacheInterceptor)
   @Get('/so/:sid')
@@ -54,7 +60,9 @@ export class SoController {
     @Param('sid', ParseIntPipe) soId: number,
     @Body() soDto: EditSoDto,
   ) {
-    return this.soService.updateSoById(userId, soId, soDto);
+    const response = this.soService.updateSoById(userId, soId, soDto);
+    this.cacheManager.reset();
+    return response;
   }
 
   @UseGuards(JwtGuard)
@@ -63,29 +71,33 @@ export class SoController {
     @GetUser('id') userId: number,
     @Param('sid', ParseIntPipe) soId: number,
   ) {
-    return this.soService.deleteSoById(userId, soId);
+    const response = this.soService.deleteSoById(userId, soId);
+    this.cacheManager.reset();
+    return response;
   }
 
   @UseInterceptors(SoInterceptor)
   @UseGuards(JwtGuard)
   @Post('/so')
   addSo(@GetUser('id') userId: number, @Body() soDto: NewSoDto) {
-    return this.soService.addSo(userId, soDto);
+    const response = this.soService.addSo(userId, soDto);
+    this.cacheManager.reset();
+    return response;
   }
 
-  @CacheKey('so')
   @CacheTTL(5 * 60) // 5 mins
   @UseInterceptors(CacheInterceptor)
   @Get('/so')
-  getSo() {
-    return this.soService.getSo();
+  getSo(@Query() query: string) {
+    const params = this.soService.filterQueryParams(query);
+    return this.soService.getSo(params);
   }
 
-  @CacheKey('so')
   @CacheTTL(5 * 60) // 5 mins
   @UseInterceptors(CacheInterceptor)
   @Get()
-  get() {
-    return this.soService.getSo();
+  get(@Query() query: string) {
+    const params = this.soService.filterQueryParams(query);
+    return this.soService.getSo(params);
   }
 }
