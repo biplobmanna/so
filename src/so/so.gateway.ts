@@ -38,7 +38,7 @@ export class SoGateway
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('addSo')
   async handleMessage(client: Socket, payload: NewSoDto): Promise<void> {
-    this.logger.log(`\nClient: ${client.id}\nPayload: ${payload.content}\n`);
+    // this.logger.log(`\nClient: ${client.id}\nPayload: ${payload.content}\n`);
     // addSo()
     // extract userId from JWT payload
     // hackxy solution, needs better implementation
@@ -49,7 +49,7 @@ export class SoGateway
     // this.logger.log(jwtData);
 
     const userId = parseInt(jwtData['sub']);
-    this.logger.log(userId);
+    // this.logger.log(userId);
 
     this.soService.addSo(userId, payload);
 
