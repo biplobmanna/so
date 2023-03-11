@@ -1,5 +1,8 @@
 import {
   Body,
+  CacheInterceptor,
+  CacheKey,
+  CacheTTL,
   Controller,
   Delete,
   Get,
@@ -20,16 +23,25 @@ import { SoInterceptor } from './so.interceptor';
 export class SoController {
   constructor(private soService: SoService) {}
 
+  @CacheKey('sotag')
+  @CacheTTL(5 * 60) // 5 mins
+  @UseInterceptors(CacheInterceptor)
   @Get('/so/tag/:tag')
   getSoByTag(@Param('tag') tag: string) {
     return this.soService.getSoByTag(tag);
   }
 
+  @CacheKey('sousers')
+  @CacheTTL(10 * 60) // 10 mins
+  @UseInterceptors(CacheInterceptor)
   @Get('/so/users/:username')
   getSoByUser(@Param('username') username: string) {
     return this.soService.getSoByUser(username);
   }
 
+  @CacheKey('soid')
+  @CacheTTL(60 * 60) // 1h
+  @UseInterceptors(CacheInterceptor)
   @Get('/so/:sid')
   getSoById(@Param('sid', ParseIntPipe) sid: number) {
     return this.soService.getSoById(sid);
@@ -61,11 +73,17 @@ export class SoController {
     return this.soService.addSo(userId, soDto);
   }
 
+  @CacheKey('so')
+  @CacheTTL(5 * 60) // 5 mins
+  @UseInterceptors(CacheInterceptor)
   @Get('/so')
   getSo() {
     return this.soService.getSo();
   }
 
+  @CacheKey('so')
+  @CacheTTL(5 * 60) // 5 mins
+  @UseInterceptors(CacheInterceptor)
   @Get()
   get() {
     return this.soService.getSo();
