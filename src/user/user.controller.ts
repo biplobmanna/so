@@ -1,7 +1,6 @@
 import {
   Body,
   CacheInterceptor,
-  CacheKey,
   CacheTTL,
   Controller,
   Get,
@@ -25,7 +24,6 @@ import { EditUserDto } from './dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @CacheKey('users') // keys
   @CacheTTL(10 * 60) // 10mins
   @UseInterceptors(CacheInterceptor) // auto caching
   @Get(':username')
