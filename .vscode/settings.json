@@ -6,11 +6,19 @@
   },
   "cSpell.words": [
     "datasources",
+    "devcache",
     "editedusername",
+    "hackxy",
     "sodev",
+    "soid",
+    "sotag",
     "sotest",
+    "sousers",
+    "testcache",
     "testdb",
     "testuser",
-    "userdoesntexist"
+    "userdoesntexist",
+    "wsjwt",
+    "WSPORT"
   ]
 }
