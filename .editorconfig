@@ -20,7 +20,7 @@ indent_size = 2
 trim_trailing_whitespace = false
 insert_final_newline = true
 
-[*.{js,json,html,css,sass,py,md,markdown,c,cpp,rs}]
+[*.{js,ts,yml,json,html,css,sass,py,md,markdown,c,cpp,rs}]
 indent_style = space
 indent_size = 2
 
