@@ -14,6 +14,9 @@
     "cache:dev:rm": "docker compose rm devcache -s -f -v",
     "cache:dev:up": "docker compose up devcache -d",
     "cache:dev:restart": "yarn cache:dev:rm && yarn cache:dev:up",
+    "dev:rm": "yarn db:dev:rm && yarn cache:dev:rm",
+    "dev:up": "yarn db:dev:up && yarn cache:dev:up",
+    "dev:restart": "yarn db:dev:restart && yarn cache:dev:restart",
     "db:test:show": "dotenv -e .env.test -- prisma studio",
     "db:test:deploy": "dotenv -e .env.test -- prisma migrate deploy",
     "db:test:rm": "docker compose rm sotest -s -f -v",
@@ -22,6 +25,9 @@
     "cache:test:rm": "docker compose rm testcache -s -f -v",
     "cache:test:up": "docker compose up testcache -d",
     "cache:test:restart": "yarn cache:test:rm && yarn cache:test:up",
+    "test:rm": "yarn db:test:rm && yarn cache:test:rm",
+    "test:up": "yarn db:test:up && yarn cache:test:up",
+    "test:restart": "yarn db:test:restart && yarn cache:test:restart",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -33,7 +39,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "pretest:e2e": "yarn db:test:restart && yarn cache:test:restart",
+    "pretest:e2e": "yarn test:restart",
     "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json"
   },
   "dependencies": {
