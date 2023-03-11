@@ -18,6 +18,7 @@ Share your epiphanies, what we call `so` (singular & plural) here and let others
 - nestjs
 - ts
 - postgres
+- redis
 - docker
 
 ### Additional Packages Used
@@ -27,14 +28,22 @@ Share your epiphanies, what we call `so` (singular & plural) here and let others
   - `@nestjs/passport`
   - `passport`
   - `passport-jwt`
-  - `argon2` : since `bcrypt` is only limited to 48 chars
+  - `argon2` : since `bcrypt` is only limited to first 48 chars
 - **db**
   - `@prisma/client`
   - `prisma` (dev deps)
+- **cache**
+  - `cache-manager`
+  - `cache-manager-redis-store` (breaking changed from v3.0.0)
+- **websockets**
+  - `socket.io`
+  - `@nestjs/platform-socket.io` (already includes `socket.io`)
+  - `@nestjs/websockets`
 - **config**
   - `@nestjs/config`
 - **util**
-  - `class-transformer`, `class-validator` : for custom param decorators
+  - `class-transformer`
+  - `class-validator`
 - **tests**
   - `pactum` : (for e2e test & TDD) APIs are better & easier than `supertest`
   - `dotenv-cli` : to pass `.env.test` env-vars during testing
@@ -43,13 +52,11 @@ Share your epiphanies, what we call `so` (singular & plural) here and let others
 
 ```text
 OS: W11
-NodeJS: v18
 Editor: VSCode
-Dev Env: W11
-Dev DB: Postgres
-Dev DB Env: Docker Container w/ Postgres
-Test DB Env: Docker Container w/ Postgres
-Pacman: yarn
+DB: postgres @latest on docker
+Cache: redis @latest on docker
+node: v18.14.0
+yarn: 1.22.19
 ```
 
 ### Modules
@@ -61,6 +68,10 @@ Pacman: yarn
   - user profile related
 - so
   - CRUD so
+- prisma
+  - ORM used instead of sequelize
+- redis
+  - caching
 
 ### Routes
 
@@ -80,6 +91,23 @@ Pacman: yarn
   - PROTECTED :: PATCH `/so/:sid` : update `so` with `sid`
   - PROTECTED :: DELETE `/so/:sid` : delete `so` with `sid`
 
+All `GET` request, except those using **id** accept pagination query parameters:
+
+- `take`
+- `step`
+- `orderby`
+- `type`
+
+```text
+URL/skip=2&take=10&orderby=id&type=desc
+```
+
+### Websockets
+
+- only namespace `so` emits data
+- send data from client to `addSo` (PROTECTED)
+- JWT is passed in the headers `token: <jwt>`
+
 ### Yarn Scripts
 
 #### Dev Env Scripts
@@ -91,6 +119,12 @@ Pacman: yarn
   "db:dev:rm": "docker compose rm sodev -s -f -v",
   "db:dev:up": "docker compose up sodev -d",
   "db:dev:restart": "yarn db:dev:rm && yarn db:dev:up && timeout 2 && yarn db:dev:deploy",
+  "cache:dev:rm": "docker compose rm devcache -s -f -v",
+  "cache:dev:up": "docker compose up devcache -d",
+  "cache:dev:restart": "yarn cache:dev:rm && yarn cache:dev:up",
+  "dev:rm": "yarn db:dev:rm && yarn cache:dev:rm",
+  "dev:up": "yarn db:dev:up && yarn cache:dev:up",
+  "dev:restart": "yarn db:dev:restart && yarn cache:dev:restart",
 }
 ```
 
@@ -103,16 +137,25 @@ Pacman: yarn
   "db:test:rm": "docker compose rm sotest -s -f -v",
   "db:test:up": "docker compose up sotest -d",
   "db:test:restart": "yarn db:test:rm && yarn db:test:up && timeout 2 && yarn db:test:deploy",
-  "pretest:e2e": "yarn db:test:restart",
-  "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json"
+  "cache:test:rm": "docker compose rm testcache -s -f -v",
+  "cache:test:up": "docker compose up testcache -d",
+  "cache:test:restart": "yarn cache:test:rm && yarn cache:test:up",
+  "test:rm": "yarn db:test:rm && yarn cache:test:rm",
+  "test:up": "yarn db:test:up && yarn cache:test:up",
+  "test:restart": "yarn db:test:restart && yarn cache:test:restart",
 }
 ```
 
 > If running on **\*nix** based OS's change `timeout 2` to `sleep 2` in the above scripts.
-
 ---
 
-### Some Caveats
+### Be Mindful of
 
-- this is backend only
+- this is **backend only**
 - `.env` and `.env.test` are also included which should not be generally included
+- Be careful while starting the container the first time, as the situation maybe non-deterministic. It's advisable to be mindful of the migrations, as without them the db will be unusable.
+- `redis` containers have volumes attached to them: `cache/dcache` and `cache/tcache` for dev & test respectively. While setting up, create these folders.
+- It's better to use `docker compose up` to setup all the containers for the first time, and then use `yarn db:dev:restart` and `yarn db:test:restart` hereon.
+- to see the database use `yarn db:dev:show` or equivalent instead of setting up a DB client for ease of use.
+- for **websockets** the JWT is passed in the headers `token: <jwt>`
+-
