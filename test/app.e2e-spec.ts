@@ -9,6 +9,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { SignupDto } from '../src/auth/dto';
 import { EditUserDto } from '../src/user/dto';
 import { NewSoDto } from '../src/so/dto';
+import { RedisService } from '../src/redis/redis.service';
 
 // use the config service to get the PORT
 const PORT = new ConfigService().get('PORT');
@@ -16,6 +17,7 @@ const PORT = new ConfigService().get('PORT');
 describe('So Test e2e:', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  let redis: RedisService;
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
@@ -30,6 +32,8 @@ describe('So Test e2e:', () => {
     await app.listen(PORT); // start server
     prisma = app.get(PrismaService);
     await prisma.cleanDb(); // reset DB
+    redis = app.get(RedisService);
+    await redis.clearCache();
     pactum.request.setBaseUrl('http://localhost:' + PORT); // pactum config
   });
 
@@ -231,7 +235,7 @@ describe('So Test e2e:', () => {
     });
   });
 
-  // So
+  // So;
   describe('So', () => {
     const soDto1: NewSoDto = {
       content: 'testing is as time consuming',
