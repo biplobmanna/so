@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from '../../prisma/prisma.service';
-import { JwtDto } from '../dto';
 import { WsException } from '@nestjs/websockets';
+import { Jwt } from '../../../types';
 
 @Injectable()
 export class WsJwtStrategy extends PassportStrategy(Strategy, 'wsjwt') {
@@ -18,7 +18,7 @@ export class WsJwtStrategy extends PassportStrategy(Strategy, 'wsjwt') {
     this.logger.log(`here`);
   }
 
-  async validate(payload: JwtDto) {
+  async validate(payload: Jwt) {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
