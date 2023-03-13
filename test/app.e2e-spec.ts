@@ -33,7 +33,7 @@ describe('So Test e2e:', () => {
     prisma = app.get(PrismaService);
     await prisma.cleanDb(); // reset DB
     redis = app.get(RedisService);
-    await redis.clearCache();
+    await redis.reset();
     pactum.request.setBaseUrl('http://localhost:' + PORT); // pactum config
   });
 
