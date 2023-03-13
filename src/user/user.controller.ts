@@ -13,6 +13,8 @@ import { UserService } from './user.service';
 import { JwtGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
 import { EditUserDto } from './dto';
+import { PaginationParams } from '../../types';
+import { RedisService } from '../redis/redis.service';
 
 /**
  * - **user**
@@ -22,18 +24,28 @@ import { EditUserDto } from './dto';
 
 @Controller('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private redisService: RedisService,
+  ) {}
 
   // @CacheTTL(10 * 60) // 10mins
   // @UseInterceptors(CacheInterceptor) // auto caching
   @Get(':username')
-  getUser(@Param('username') userName: string) {
-    return this.userService.getUser(userName);
+  async getUser(
+    @Param('username') userName: string,
+    @Body('cacheKey') cacheKey: string,
+  ) {
+    const user = await this.userService.getUser(userName);
+    await this.redisService.set(cacheKey, user);
+    return user;
   }
 
   @UseGuards(JwtGuard)
   @Patch()
-  editUser(@GetUser('id') userId: number, @Body() dto: EditUserDto) {
-    return this.userService.editUser(userId, dto);
+  async editUser(@GetUser('id') userId: number, @Body() dto: EditUserDto) {
+    const user = await this.userService.editUser(userId, dto);
+    await this.redisService.clear('/users/' + user.username);
+    return user;
   }
 }
