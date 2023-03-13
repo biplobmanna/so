@@ -24,8 +24,8 @@ import { EditUserDto } from './dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @CacheTTL(10 * 60) // 10mins
-  @UseInterceptors(CacheInterceptor) // auto caching
+  // @CacheTTL(10 * 60) // 10mins
+  // @UseInterceptors(CacheInterceptor) // auto caching
   @Get(':username')
   getUser(@Param('username') userName: string) {
     return this.userService.getUser(userName);
