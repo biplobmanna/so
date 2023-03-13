@@ -44,7 +44,7 @@ export class SoService {
     });
   }
 
-  async getSoById(soId: number) {
+  async getSoById(soId: number, params?: PaginationParams) {
     try {
       return await this.prisma.so.findFirstOrThrow({
         where: {
@@ -55,6 +55,7 @@ export class SoService {
           content: true,
           tag: true,
         },
+        ...params,
       });
     } catch (error) {
       throw new NotFoundException('so does not exist!');
@@ -148,32 +149,5 @@ export class SoService {
         userId,
       },
     });
-  }
-
-  filterQueryParams(query: string): PaginationParams {
-    const params: PaginationParams = {
-      orderBy: {},
-    };
-    if (query['skip']) {
-      try {
-        params['skip'] = parseInt(query['skip']);
-      } catch (error) {}
-    }
-    if (query['take']) {
-      try {
-        params['take'] = parseInt(query['take']);
-      } catch (error) {}
-    }
-
-    if (
-      query['orderby'] === 'id' ||
-      query['orderby'] === 'userId' ||
-      query['orderby'] === 'tag'
-    ) {
-      const type: string = query['type'] === 'desc' ? 'desc' : 'asc';
-      params['orderBy'][query['orderby']] = type;
-    }
-
-    return params;
   }
 }

@@ -1,17 +1,13 @@
 import {
   Body,
-  CACHE_MANAGER,
-  CacheInterceptor,
-  CacheTTL,
   Controller,
   Delete,
   Get,
-  Inject,
+  Logger,
   Param,
   ParseIntPipe,
   Patch,
   Post,
-  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -20,84 +16,99 @@ import { GetUser } from '../auth/decorator';
 import { SoService } from './so.service';
 import { EditSoDto, NewSoDto } from './dto';
 import { SoInterceptor } from './so.interceptor';
-import { Cache } from 'cache-manager';
+import { PaginationParams } from '../../types';
+import { RedisService } from '../redis/redis.service';
 
 @Controller()
 export class SoController {
-  constructor(
-    private soService: SoService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
-  ) {}
+  private readonly logger;
+  constructor(private soService: SoService, private redisCache: RedisService) {
+    this.logger = new Logger(SoController.name);
+  }
 
-  @CacheTTL(5 * 60) // 5 mins
-  @UseInterceptors(CacheInterceptor)
   @Get('/so/tag/:tag')
-  getSoByTag(@Param('tag') tag: string, @Query() query: string) {
-    const params = this.soService.filterQueryParams(query);
-
-    return this.soService.getSoByTag(tag, params);
+  async getSoByTag(
+    @Param('tag') tag: string,
+    @Body('params') params: PaginationParams,
+    @Body('cacheKey') cacheKey: string,
+  ) {
+    const data = await this.soService.getSoByTag(tag, params);
+    await this.redisCache.set(cacheKey, data);
+    return data;
   }
 
-  @CacheTTL(10 * 60) // 10 mins
-  @UseInterceptors(CacheInterceptor)
   @Get('/so/users/:username')
-  getSoByUser(@Param('username') username: string, @Query() query: string) {
-    const params = this.soService.filterQueryParams(query);
-    return this.soService.getSoByUser(username, params);
+  async getSoByUser(
+    @Param('username') username: string,
+    @Body('params') params: PaginationParams,
+    @Body('cacheKey') cacheKey: string,
+  ) {
+    const data = await this.soService.getSoByUser(username, params);
+    await this.redisCache.set(cacheKey, data);
+    return data;
   }
 
-  @CacheTTL(60 * 60) // 1h
-  @UseInterceptors(CacheInterceptor)
   @Get('/so/:sid')
-  getSoById(@Param('sid', ParseIntPipe) sid: number) {
-    return this.soService.getSoById(sid);
+  async getSoById(
+    @Param('sid', ParseIntPipe) sid: number,
+    @Body('params') params: PaginationParams,
+    @Body('cacheKey') cacheKey: string,
+  ) {
+    const data = await this.soService.getSoById(sid, params);
+    await this.redisCache.set(cacheKey, data);
+    return data;
   }
 
   @UseGuards(JwtGuard)
   @Patch('/so/:sid')
-  updateSoById(
+  async updateSoById(
     @GetUser('id') userId: number,
     @Param('sid', ParseIntPipe) soId: number,
     @Body() soDto: EditSoDto,
   ) {
-    const response = this.soService.updateSoById(userId, soId, soDto);
-    this.cacheManager.reset();
+    const response = await this.soService.updateSoById(userId, soId, soDto);
+    await this.redisCache.clearAll('so');
     return response;
   }
 
   @UseGuards(JwtGuard)
   @Delete('/so/:sid')
-  deleteSoById(
+  async deleteSoById(
     @GetUser('id') userId: number,
     @Param('sid', ParseIntPipe) soId: number,
   ) {
-    const response = this.soService.deleteSoById(userId, soId);
-    this.cacheManager.reset();
+    const response = await this.soService.deleteSoById(userId, soId);
+    await this.redisCache.clearAll('so');
     return response;
   }
 
-  @UseInterceptors(SoInterceptor)
+  @UseInterceptors(SoInterceptor) // push msg to Websockets
   @UseGuards(JwtGuard)
   @Post('/so')
-  addSo(@GetUser('id') userId: number, @Body() soDto: NewSoDto) {
-    const response = this.soService.addSo(userId, soDto);
-    this.cacheManager.reset();
+  async addSo(@GetUser('id') userId: number, @Body() soDto: NewSoDto) {
+    const response = await this.soService.addSo(userId, soDto);
+    await this.redisCache.clearAll('so');
     return response;
   }
 
-  @CacheTTL(5 * 60) // 5 mins
-  @UseInterceptors(CacheInterceptor)
   @Get('/so')
-  getSo(@Query() query: string) {
-    const params = this.soService.filterQueryParams(query);
-    return this.soService.getSo(params);
+  async getSo(
+    @Body('params') params: PaginationParams,
+    @Body('cacheKey') cacheKey: string,
+  ) {
+    const data = await this.soService.getSo(params);
+    await this.redisCache.set(cacheKey, data);
+    return data;
   }
 
-  @CacheTTL(5 * 60) // 5 mins
-  @UseInterceptors(CacheInterceptor)
   @Get()
-  get(@Query() query: string) {
-    const params = this.soService.filterQueryParams(query);
-    return this.soService.getSo(params);
+  // @Redirect('so', 301)
+  async get(
+    @Body('params') params: PaginationParams,
+    @Body('cacheKey') cacheKey: string,
+  ) {
+    const data = await this.soService.getSo(params);
+    await this.redisCache.set(cacheKey, data);
+    return data;
   }
 }
