@@ -158,4 +158,100 @@ URL/skip=2&take=10&orderby=id&type=desc
 - It's better to use `docker compose up` to setup all the containers for the first time, and then use `yarn db:dev:restart` and `yarn db:test:restart` hereon.
 - to see the database use `yarn db:dev:show` or equivalent instead of setting up a DB client for ease of use.
 - for **websockets** the JWT is passed in the headers `token: <jwt>`
--
+
+## APIs
+
+### REST APIs
+
+The REST APIs are in `/postman/` folder. Please import that to use.
+
+#### Public Routes
+
+- **auth**
+  - PUBLIC    :: POST `/signup`
+
+  ```json
+  {
+    "body": {
+      "email": "some@mail.com",
+      "username": "user",
+      "password": "supersecret"
+    }
+  }
+  ```
+
+  - PUBLIC    :: POST `/signin`
+
+  ```json
+  {
+    "body": {
+      "email": "some@mail.com",
+      "password": "supersecret"
+    }
+  }
+  ```
+
+- **user**
+  - PUBLIC :: GET `/users/:username` : get user by `username`
+  - PROTECTED :: PATCH `/users/:username` : update user by `username`
+
+  ```json
+  {
+    "body": {
+      "email": "some@mail.com",
+      "username": "user"
+    }
+  }
+  ```
+
+- **so**
+  - PUBLIC    :: GET `/` : get all `so`
+  - PUBLIC    :: GET `/so` : get all `so`
+  - PUBLIC    :: GET `/so/:sid` : get `so` by `sid`
+  - PUBLIC    :: GET `so/users/:username` : get all `so` of user with `username`
+  - PUBLIC    :: GET `/so/tag/:tag` :  get all `so` of tag `tag`
+  - PROTECTED :: POST `/so` : add new `so`
+
+  ```json
+  {
+    "body": {
+      "content": "this is the so content",
+      "tag": "taggy"
+
+    }
+  }
+  ```
+
+  - PROTECTED :: PATCH `/so/:sid` : update `so` with `sid`
+
+  ```json
+  {
+    "body": {
+      "content": "this is the so content",
+      "tag": "taggy"
+
+    }
+  }
+  ```
+
+  - PROTECTED :: DELETE `/so/:sid` : delete `so` with `sid`
+
+> NOTE: All protected routes expect a JWT passed through bearer token
+
+### WebSockets APIs
+
+Cannot export websockets APIs from Postman. Below is the general description for the Websockets APIs.
+
+- Server URL: `<URL>/so`
+- Add Message to event: `addSo`
+- Listen on Event: `so`
+
+Since the data is sent on the namespace `so`
+Since the server emits on the event `so`
+Since the server listens on the event `addSo`
+
+The auth token(JWT) is passed through the **HEADERS** with the key `token`
+
+```text
+token <JWT>
+```
