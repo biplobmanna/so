@@ -1,0 +1,380 @@
+{
+	"info": {
+		"_postman_id": "cb21242e-0e64-4d1f-8921-6dd220d788d1",
+		"name": "nest-rest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11645384"
+	},
+	"item": [
+		{
+			"name": "auth/signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"oda@mail.com\",\r\n    \"password\": \"hooohooo\",\r\n    \"username\": \"oda\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/auth/signin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"oda@mail.com\",\r\n    \"password\": \"hooohooo\",\r\n    \"username\": \"oda\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user by username",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/oda",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"oda"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit user by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoib2RhQG1haWwuY29tIiwiaWF0IjoxNjc4NjA0Nzg3LCJleHAiOjE2Nzg2MDU2ODd9.6yT9msUFvkf-pXkdQyQ1UK-9uVUEjuRCkEauQjS6zRI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"yoda@mail.com\",\r\n    \"password\": \"hooohooo\",\r\n    \"username\": \"yoda\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add /so",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoib2RhQG1haWwuY29tIiwiaWF0IjoxNjc4NjA0Nzg3LCJleHAiOjE2Nzg2MDU2ODd9.6yT9msUFvkf-pXkdQyQ1UK-9uVUEjuRCkEauQjS6zRI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"testing is as time consuming\",\r\n    \"tag\": \"programming\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/so",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"so"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit so by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoib2RhQG1haWwuY29tIiwiaWF0IjoxNjc4NjA0Nzg3LCJleHAiOjE2Nzg2MDU2ODd9.6yT9msUFvkf-pXkdQyQ1UK-9uVUEjuRCkEauQjS6zRI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"testing is as time consuming\",\r\n    \"tag\": \"testing\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/so/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"so",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "del so by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoib2RhQG1haWwuY29tIiwiaWF0IjoxNjc4NjA0Nzg3LCJleHAiOjE2Nzg2MDU2ODd9.6yT9msUFvkf-pXkdQyQ1UK-9uVUEjuRCkEauQjS6zRI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/so/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"so",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all so",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/so",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"so"
+					],
+					"query": [
+						{
+							"key": "skip",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "take",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "orderby",
+							"value": "tag",
+							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all so by tag",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/so/tag/programming",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"so",
+						"tag",
+						"programming"
+					],
+					"query": [
+						{
+							"key": "skip",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "take",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "orderby",
+							"value": "tag",
+							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all so by username",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/so/users/yoda",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"so",
+						"users",
+						"yoda"
+					],
+					"query": [
+						{
+							"key": "skip",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "take",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "orderby",
+							"value": "tag",
+							"disabled": true
+						},
+						{
+							"key": "type",
+							"value": "desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
